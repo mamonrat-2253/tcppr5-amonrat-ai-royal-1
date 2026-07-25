@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คลังปัญญา ราชวงศ์จักรี - Chakri Dynasty Wisdom Companion</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            royal: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              500: '#d97706',
+              600: '#b45309',
+              700: '#92400e',
+              800: '#78350f',
+              900: '#451a03',
+            },
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- React & Babel CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Charm:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Sarabun', sans-serif;
+    }
+    .royal-font {
+      font-family: 'Charm', cursive;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .perspective {
+      perspective: 1000px;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+    }
+    .transform-style-3d {
+      transform-style: preserve-3d;
+    }
+    @keyframes pulse-gold {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+    .pulse-gold-button {
+      animation: pulse-gold 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 flex justify-center items-center min-h-screen">
+
+  <!-- Main Mobile Container Mockup -->
+  <div id="root" class="w-full max-w-md h-[92vh] bg-slate-50 shadow-2xl rounded-3xl overflow-hidden flex flex-col relative border border-slate-200"></div>
+
+  <!-- React Code Component -->
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useRef } = React;
+
+    // Custom SVG Icons to ensure zero external loading issues
+    const Icons = {
+      Home: ({ className = "w-6 h-6" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+        </svg>
+      ),
+      Crown: ({ className = "w-6 h-6" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.3 16.2 18 21h-6.3h-6.3l2.7-4.8m11.7 0-4.5-9-3.6 5.4-3.6-5.4-4.5 9m16.2 0H3.9m11.7 0H8.4" />
+        </svg>
+      ),
+      Book: ({ className = "w-6 h-6" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-16.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-16.25v16.25" />
+        </svg>
+      ),
+      CheckSquare: ({ className = "w-6 h-6" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+      ),
+      Search: ({ className = "w-5 h-5" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.608 10.608Z" />
+        </svg>
+      ),
+      Bookmark: ({ className = "w-6 h-6", fill = "none" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill={fill} viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+        </svg>
+      ),
+      ArrowRight: ({ className = "w-5 h-5" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+      ),
+      ChevronRight: ({ className = "w-5 h-5" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+        </svg>
+      ),
+      RotateCcw: ({ className = "w-5 h-5" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+        </svg>
+      ),
+      Sparkles: ({ className = "w-5 h-5" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 21l-.813-5.096L3 15l5.096-.813L9 9l.813 5.187L15 15l-5.187.813zM18 10.5l-.54-1.96L15.5 8l1.96-.54L18 5.5l.54 1.96L20.5 8l-1.96.54L18 10.5z" />
+        </svg>
+      ),
+      PaperAirplane: ({ className = "w-5 h-5" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+        </svg>
+      ),
+      Loader: ({ className = "w-5 h-5 animate-spin" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992" />
+        </svg>
+      )
+    };
+
+    const conceptData = {
+      title: "สถาบันพระมหากษัตริย์กับประเทศไทย",
+      intro: "สถาบันพระมหากษัตริย์ในประเทศไทยเป็นศูนย์รวมใจชาวไทยที่สืบทอดมายาวนานหลายศตวรรษ หลอมรวมจิตใจให้เกิดความผาสุกโดยอิงแนวคิดหลัก 3 ประการ และมีพระราชภาระหลักตามคติพราหมณ์ฮินดูและหลักราชธรรมในพระพุทธศาสนา",
+      pillars: [
+        {
+          id: 1,
+          title: "แนวคิดพราหมณ์ฮินดู",
+          desc: "ถือว่าผู้ที่ดำรงตำแหน่งกษัตริย์คือองค์อวตารของพระผู้เป็นเจ้า เพื่อธำรงความผาสุกของโลกมนุษย์ เป็นแนวคิดเบื้องต้นเมื่อได้รับคติความเชื่อเข้ามา"
+        },
+        {
+          id: 2,
+          title: "แนวคิดพระพุทธศาสนา",
+          desc: "เชื่อเรื่องบุญบารมี และถือว่าพระมหากษัตริย์ทรงมีลักษณะของเทพ 3 ประเภท ได้แก่ สมมติเทพ อุปบัติเทพ และวิสุทธิเทพ อยู่ในองค์เดียวกัน"
+        },
+        {
+          id: 3,
+          title: "แนวคิดความสัมพันธ์บิดา-บุตร",
+          desc: "ความสัมพันธ์ใกล้ชิดเป็นกันเองระหว่างผู้ปกครองกับผู้ใต้ปกครอง ดำเนินตามมนุษยธรรมและการสอนสั่งให้รู้จักบาปบุญคุณโทษ"
+        }
+      ],
+      terms: [
+        { name: "พระเจ้าแผ่นดิน", definition: "ผู้ทรงบำรุงรักษาแผ่นดินให้อุดมสมบูรณ์ เพื่อให้ราษฎรใช้ประโยชน์ทำกิน ดังเช่นโครงการพระราชดำริมากมาย" },
+        { name: "พระเจ้าอยู่หัว", definition: "แสดงความเคารพเทิดทูนสูงสุด ยอมรับพระราชสถานะว่าทรงเป็นองค์พระพุทธเจ้า ซึ่งถือเป็นยอดแห่งความมงคล" },
+        { name: "เจ้าชีวิต", definition: "ผู้พระราชทานกำเนิดแนวคิดโครงการต่างๆ แก่ประชาชน โดยทรงดำรงธรรมะเป็นองค์ประกอบหลักในการวินิจฉัย" }
+      ]
+    };
+
+    const kingsList = [
+      {
+        id: 1,
+        title: "รัชกาลที่ 1",
+        fullName: "พระบาทสมเด็จพระพุทธยอดฟ้าจุฬาโลกมหาราช",
+        reign: "พ.ศ. 2325 - 2352 (ครองราชย์ 28 ปี)",
+        keyFacts: [
+          { label: "พระนามเดิม", val: "ด้วง หรือ ทองด้วง (เสด็จพระราชสมภพ 20 มีนาคม พ.ศ. 2279)" },
+          { label: "การย้ายราชธานี", val: "ย้ายจากธนบุรีมาฝั่งตะวันออก (กรุงเทพฯ) ด้วยชัยภูมิดีกว่า ป้องกันข้าศึกได้ดีกว่า" },
+          { label: "ศึกสงครามเด่น", val: "สงครามเก้าทัพ (พ.ศ. 2328) และสงครามท่าดินแดง (พ.ศ. 2329) มีชัยเหนือพม่าทุกทัพ" },
+          { label: "งานชำระกฎหมาย", val: "โปรดให้ชำระกฎหมายประทับตราพระราชสีห์ พระคชสีห์ และบัวแก้ว เรียกว่า 'กฎหมายตราสามดวง'" },
+          { label: "ด้านศาสนาและวรรณคดี", val: "สังคายนาพระไตรปิฎกลำดับที่ 9 ของโลก ณ วัดมหาธาตุ, ทรงพระราชนิพนธ์วรรณกรรมเรื่องรามเกียรติ์ฉบับสมบูรณ์" }
+        ],
+        badge: "ผู้สถาปนาราชวงศ์จักรี"
+      },
+      {
+        id: 2,
+        title: "รัชกาลที่ 2",
+        fullName: "พระบาทสมเด็จพระพุทธเลิศหล้านภาลัย",
+        reign: "พ.ศ. 2352 - 2367 (ครองราชย์ 15 ปี)",
+        keyFacts: [
+          { label: "พระนามเดิม", val: "ฉิม (ประสูติ ณ อัมพวา วันที่ 24 กุมภาพันธ์ พ.ศ. 2310)" },
+          { label: "ยุคทองวรรณคดี", val: "ทรงเป็นศิลปินกวีเด่น ทรงพระราชนิพนธ์บทละครรำ 'อิเหนา' (ยอดแห่งบทละครรำ), สังข์ทอง, ขุนช้างขุนแผน" },
+          { label: "ดนตรีและศิลปกรรม", val: "ทรงเชี่ยวชาญซอสามสาย มีซอคู่พระหัตถ์ชื่อ 'ซอสายฟ้าฟาด' แกะสลักบานประตูวัดสุทัศน์ด้วยพระองค์เอง" },
+          { label: "ริเริ่มสัญลักษณ์ชาติ", val: "นำรูปช้างสีขาวอยู่กลางวงจักรประดับในธงพื้นแดง ซึ่งใช้เป็นธงชาติไทยในเวลาต่อมา" },
+          { label: "การค้าและสังคม", val: "ส่งสำเภาหลวงค้าขายต่างประเทศรุ่งเรืองมาก ทรงออกพระราชกำหนดห้ามซื้อขายและสูบฝิ่นเด็ดขาด" }
+        ],
+        badge: "บุคคลสำคัญของโลก (UNESCO)"
+      },
+      {
+        id: 3,
+        title: "รัชกาลที่ 3",
+        fullName: "พระบาทสมเด็จพระนั่งเกล้าเจ้าอยู่หัว",
+        reign: "พ.ศ. 2367 - 2394 (ครองราชย์ 27 ปี)",
+        keyFacts: [
+          { label: "พระนามเดิม", val: "หม่อมเจ้าทับ (ร.2 ทรงเรียกว่า 'เจ้าสัว' จากการคุมสำเภาค้าขายได้กำไรมาก)" },
+          { label: "ปฏิรูปการจัดเก็บภาษี", val: "ริเริ่มระบบเจ้าภาษีนายอากร จัดตั้งภาษีใหม่ 38 ชนิด เปลี่ยนการเก็บอากรค่านาจากข้าวเป็นเงินสด" },
+          { label: "กองทุนรักษาแผ่นดิน", val: "สะสมเงินจากการค้าสำเภาหลวงที่เรียกว่า 'เงินถุงแดง' ซึ่งได้ใช้กู้บ้านเมืองในวิกฤต ร.ศ. 112" },
+          { label: "สถาปัตยกรรมพระราชนิยม", val: "สถาปัตยกรรมแบบไม่มีช่อฟ้า ใบระกา หน้าบันตกแต่งกระเบื้องเคลือบจีน เช่น วัดราชโอรสาราม" },
+          { label: "การระงับข้อพิพาท", val: "ทำศึกอานามสยามยุทธเกือบ 15 ปี สงบศึก พ.ศ. 2390 และสร้างป้อมปราการป้องกันข้าศึกทางน้ำ" }
+        ],
+        badge: "พระมหาเจษฎาราชเจ้า"
+      },
+      {
+        id: 4,
+        title: "รัชกาลที่ 4",
+        fullName: "พระบาทสมเด็จพระจอมเกล้าเจ้าอยู่หัว",
+        reign: "พ.ศ. 2394 - 2411 (ครองราชย์ 17 ปี)",
+        keyFacts: [
+          { label: "พระนามเดิม", val: "เจ้าฟ้ามงกุฎ (ทรงผนวช 27 ปี ธุดงค์ทั่วแผ่นดินและทรงสถาปนาคณะสงฆ์ธรรมยุติกนิกาย)" },
+          { label: "สนธิสัญญาเบาว์ริง", val: "ทรงเปิดสัมพันธภาพกับตะวันตก ลงนามสนธิสัญญาเบาว์ริงกับอังกฤษเมื่อ 18 เมษายน พ.ศ. 2398" },
+          { label: "กำเนิดตำรวจสยาม", val: "ทรงเป็นพระผู้สถาปนากิจการตำรวจไทยขึ้นเป็นครั้งแรก (จัดตั้งกองโปลิศนครบาล)" },
+          { label: "ปราชญ์วิทยาศาสตร์", val: "ทรงคำนวณและพยากรณ์ล่วงหน้า 2 ปีว่าจะเกิดสุริยุปราคาเต็มดวง ณ ตำบลหว้ากอ เมื่อ 18 สิงหาคม พ.ศ. 2411" },
+          { label: "ความก้าวหน้าสมัยใหม่", val: "ตั้งโรงพิมพ์อักษรพิมพการ ออกราชกิจจานุเบกษา สร้างโรงกษาปณ์ผลิตเหรียญแทนเงินพดด้วง" }
+        ],
+        badge: "พระบิดาแห่งวิทยาศาสตร์ไทย"
+      },
+      {
+        id: 5,
+        title: "รัชกาลที่ 5",
+        fullName: "พระบาทสมเด็จพระจุลจอมเกล้าเจ้าอยู่หัว",
+        reign: "พ.ศ. 2411 - 2453 (ครองราชย์ 42 ปี)",
+        keyFacts: [
+          { label: "พระนามเดิม", val: "สมเด็จเจ้าฟ้าจุฬาลงกรณ์" },
+          { label: "การเลิกทาสและไพร่", val: "ทรงเลิกทาสด้วยวิธีผ่อนปรน และยกเลิกระบบไพร่ (เกณฑ์แรงงานชาย) เปิดเสรีภาพให้ประชาชนทำกิน" },
+          { label: "ปฏิรูปการปกครองใหญ่", val: "ยกเลิกระบบจตุสดมภ์ดั้งเดิม จัดตั้งกระทรวง 12 กระทรวง มีการแบ่งหน้าที่ชัดเจนอย่างเป็นสากล" },
+          { label: "การต่างประเทศกอบกู้แผ่นดิน", val: "เสด็จประพาสยุโรป 2 ครั้ง และทรงยอมสละดินแดนบางส่วนเพื่อรักษาเอกราชสยามในวิกฤต ร.ศ. 112" },
+          { label: "สาธารณูปโภคพื้นฐาน", val: "ริเริ่มกิจการ รถไฟ, ประปา, ไฟฟ้า, โทรศัพท์, ไปรษณีย์โทรเลข และการจัดตั้งโรงพยาบาลศิริราช" }
+        ],
+        badge: "พระปิยมหาราช"
+      },
+      {
+        id: 6,
+        title: "รัชกาลที่ 6",
+        fullName: "พระบาทสมเด็จพระมงกุฎเกล้าเจ้าอยู่หัว",
+        reign: "พ.ศ. 2453 - 2468 (ครองราชย์ 15 ปี)",
+        keyFacts: [
+          { label: "พระนามเดิม", val: "เจ้าฟ้ามหาวชิราวุธ" },
+          { label: "การศึกษาขั้นพื้นฐาน", val: "ตรา พ.ร.บ.ประถมศึกษาภาคบังคับ พ.ศ. 2464 และสถาปนาจุฬาลงกรณ์มหาวิทยาลัย" },
+          { label: "สงครามโลกครั้งที่ 1", val: "ส่งทหารร่วมรบฝ่ายสัมพันธมิตร นำมาซึ่งความสำเร็จในการเจรจาแก้ไขสนธิสัญญาไม่เป็นธรรมศาลและภาษี" },
+          { label: "ลูกเสือและเสือป่า", val: "ทรงจัดตั้งกองเสือป่าและองค์การลูกเสือ เพื่อปลูกฝังความรักชาติ ความสามัคคีในหมู่คณะ" },
+          { label: "ดุสิตธานีประชาธิปไตย", val: "จัดตั้งเมืองจำลองดุสิตธานีและประกาศธรรมนูญการปกครอง พ.ศ. 2461 เพื่อทดลองการปกครองระบอบประชาธิปไตย" },
+          { label: "อุตสาหกรรมและสังคม", val: "เปลี่ยนธงชาติเป็นธงไตรรงค์, พระราชทานนามสกุลแก่คนไทย, ก่อตั้งคลังออมสิน และบริษัทปูนซีเมนต์ไทย" }
+        ],
+        badge: "สมเด็จพระมหาธีรราชเจ้า"
+      },
+      {
+        id: 7,
+        title: "รัชกาลที่ 7",
+        fullName: "พระบาทสมเด็จพระปกเกล้าเจ้าอยู่หัว",
+        reign: "พ.ศ. 2468 - 2477 (ครองราชย์ 9 ปี)",
+        keyFacts: [
+          { label: "พระนามเดิม", val: "เจ้าฟ้าประชาธิปกศักดิเดชน์ กรมขุนสุโขทัยธรรมราชา" },
+          { label: "การเปลี่ยนระบอบปกครอง", val: "ทรงยินยอมเปลี่ยนแปลงการปกครองสู่ประชาธิปไตย (24 มิถุนายน พ.ศ. 2475) โดยทรงเติมคำว่า 'ชั่วคราว' ในรัฐธรรมนูญฉบับแรก" },
+          { label: "การสละราชสมบัติ", val: "สละราชสมบัติเมื่อวันที่ 2 มีนาคม พ.ศ. 2477 ณ ประเทศอังกฤษ โดยทรงมุ่งหวังประโยชน์สุขของคนส่วนใหญ่ยิ่งกว่าส่วนตน" },
+          { label: "ระเบียบข้าราชการพลเรือน", val: "วางรากฐานข้าราชการอาชีพ จัดตั้งการสอบคัดเลือกเพื่อความเสมอภาคและยุติธรรม" },
+          { label: "ด้านศาสนาแผ่นดิน", val: "จัดพิมพ์พระไตรปิฎกฉบับสมบูรณ์ 'พระไตรปิฎกสยามรัฐ' 1,500 จบ และเริ่มการประกวดแต่งหนังสือสอนศีลธรรมเด็ก" }
+        ],
+        badge: "พระผู้พระราชทานรัฐธรรมนูญ"
+      },
+      {
+        id: 8,
+        title: "รัชกาลที่ 8",
+        fullName: "พระบาทสมเด็จพระเจ้าอยู่หัวอานันทมหิดล",
+        reign: "พ.ศ. 2477 - 2489 (ครองราชย์ 12 ปี)",
+        keyFacts: [
+          { label: "พระนามเดิม", val: "พระวรวงศ์เธอ พระองค์เจ้าอานันทมหิดล (เสด็จพระราชสมภพ ณ เยอรมนี)" },
+          { label: "ยุวกษัตริย์ในระบอบใหม่", val: "เสด็จขึ้นครองราชย์เมื่อพระชนมายุเพียง 8 พรรษาส่วนใหญ่อยู่ระหว่างศึกษา ณ สวิตเซอร์แลนด์" },
+          { label: "ประเสริฐด้วยมนุษยธรรม", val: "ทรงเสด็จประพาสสำเพ็งเพื่อบำรุงขวัญราษฎรและประสานรอยร้าวกรณีข้อพิพาทความขัดแย้งของคนไทยกับจีน" },
+          { label: "เกียรติยศเยาวชน", val: "วันคล้ายวันพระราชสมภพ (20 กันยายน) ได้รับการกำหนดให้เป็น 'วันเยาวชนแห่งชาติ' ของประเทศไทย" }
+        ],
+        badge: "พระอัฐมรามาธิบดินทร"
+      },
+      {
+        id: 9,
+        title: "รัชกาลที่ 9",
+        fullName: "พระบาทสมเด็จพระเจ้าอยู่หัวภูมิพลอดุลยเดช",
+        reign: "พ.ศ. 2489 - 2559 (ครองราชย์ 70 ปี)",
+        keyFacts: [
+          { label: "พระนามเดิม", val: "พระวรวงศ์เธอ พระองค์เจ้าภูมิพลอดุลยเดช (เสด็จพระราชสมภพ ณ สหรัฐอเมริกา)" },
+          { label: "คำสัตยาธิษฐาน", val: "ปฐมบรมราชโองการ 'เราจะครองแผ่นดินโดยธรรม เพื่อประโยชน์สุขแห่งมหาชนชาวสยาม'" },
+          { label: "ปรัชญาเศรษฐกิจพอเพียง", val: "พระราชทานปรัชญาความพอประมาณ พึ่งพาตนเอง และระบบเกษตรกรรม 'ทฤษฎีใหม่' เพื่อแก้ปัญหาวิกฤตเศรษฐกิจ" },
+          { label: "โครงการพระราชดำริเด่น", val: "คิดค้นฝนหลวงแก้วิกฤตแล้ง, โครงการแกล้งดินเพื่อปรับสภาพดินเปรี้ยว, โครงการแก้มลิงกันน้ำท่วม และกังหันน้ำชัยพัฒนา" },
+          { label: "คุณูปการระดับสากล", val: "ได้รับทูลเกล้าฯ ถวายรางวัลความสำเร็จสูงสุดด้านการพัฒนามนุษย์ (Lifetime Achievement Award) จากเลขาธิการ UN" }
+        ],
+        badge: "กษัตริย์นักพัฒนาผู้ครองใจปวงชน"
+      }
+    ];
+
+    const flashcardsData = [
+      { term: "สมมติเทพ (Devaraja)", definition: "คติความเชื่อพราหมณ์ฮินดูว่ากษัตริย์คืออวตารของเทพผู้ปกป้องโลก" },
+      { term: "วิสุทธิเทพ (Visuddhideva)", definition: "สถานะเทพสูงสุดในพุทธศาสนา หมายถึงพระพุทธเจ้า พระปัจเจกพุทธเจ้า และพระอรหันต์" },
+      { term: "เงินถุงแดง (Red Bag Money)", definition: "เงินสะสมจากการค้าสำเภาของ ร.3 ที่เก็บไว้และถูกนำมาใช้ไถ่บ้านไถ่เมืองจ่ายค่าปรับในวิกฤต ร.ศ. 112" },
+      { term: "สนธิสัญญาเบาว์ริง (Bowring)", definition: "สัญญาทางการทูตและการค้าระหว่างสยามกับอังกฤษในสมัย ร.4 นำระบบการค้าเสรีสากลเข้ามาทดแทนการผูกขาดของพระคลังสินค้า" },
+      { term: "หอรัษฎากรพิพัฒน์", definition: "องค์กรปฏิรูปการจัดเก็บภาษีที่จัดตั้งโดย ร.5 เพื่อรวมอำนาจและป้องกันการรั่วไหลของรายได้แผ่นดิน" },
+      { term: "ดุสิตธานี", definition: "เมืองจำลองในสมัย ร.6 เพื่อทดลองการบริหารจัดการแบบระบอบประชาธิปไตย มีการเลือกตั้งพรรคการเมืองและการปกครองตนเอง" },
+      { term: "พระไตรปิฎกสยามรัฐ", definition: "พระไตรปิฎกฉบับพิมพ์อักษรไทยที่สมบูรณ์เล่มแรก จัดพิมพ์ 1,500 จบ เผยแพร่ในสมัย ร.7" },
+      { term: "โครงการแก้มลิง", definition: "แนวทางจัดการน้ำท่วมตามแนวพระราชดำริ ร.9 โดยพักน้ำฝนไว้ในแก้มลิงตอนน้ำทะเลขึ้น และระบายทิ้งตอนน้ำทะเลลดลง" },
+      { term: "แกล้งดิน", definition: "เทคนิคแก้ปัญหาดินเปรี้ยวจัดตามพระราชดำริ ร.9 โดยขังน้ำสลับระบายให้ดินเปรี้ยวจัดสุดขีดก่อนใช้ปูนขาวเข้าปรับโครงสร้างดิน" }
+    ];
+
+    const quizQuestions = [
+      {
+        questionNumber: 1,
+        question: "ในคัมภีร์จักรวาฬทีปนี (แต่ง พ.ศ. 2063) อธิบายว่า พระมหากษัตริย์ พระเทวี และพระกุมาร มีสถานะเป็นเทพประเภทใด?",
+        answerOptions: [
+          { text: "สมมติเทพ", isCorrect: true, rationale: "คัมภีร์จักรวาฬทีปนีระบุชัดเจนว่า 'พระราชา พระเทวี พระกุมาร ชื่อว่าสมมติเทพ'" },
+          { text: "อุปบัติเทพ", isCorrect: false, rationale: "ตัวเลือกนี้หมายถึงเทวดาที่อยู่ ณ ภาคพื้นดินและสวรรค์ ไม่ใช่กษัตริย์ในเชิงโลกมนุษย์" },
+          { text: "วิสุทธิเทพ", isCorrect: false, rationale: "ตัวเลือกนี้หมายถึงพระพุทธเจ้า พระปัจเจกพุทธเจ้า และพระอรหันต์ผู้บริสุทธิ์" },
+          { text: "เทวอวตาร", isCorrect: false, rationale: "ตัวเลือกนี้เป็นคติฝั่งพราหมณ์ฮินดูดั้งเดิม ไม่ใช่แนวคิดเทพ 3 ประเภทตามพระพุทธศาสนา" }
+        ],
+        hint: "ดูประโยคที่ว่า '...พระราชา พระเทวี พระกุมาร ชื่อว่า...'"
+      },
+      {
+        questionNumber: 2,
+        question: "แนวคิดดั้งเดิมของไทยที่มีลักษณะใกล้ชิด ไม่มีการแบ่งวรรณะ แตกต่างจากพราหมณ์ คือแนวคิดความสัมพันธ์แบบใด?",
+        answerOptions: [
+          { text: "บิดา-บุตร", isCorrect: true, rationale: "ความสัมพันธ์แบบพ่อปกครองลูกเน้นความใกล้ชิดดั้งเดิมของสังคมไทย ไม่แบ่งวรรณะและปกครองด้วยความรักเอ็นดู" },
+          { text: "สมมติเทวราช", isCorrect: false, rationale: "ตัวเลือกนี้เน้นแบ่งแยกชนชั้นวรรณะของกษัตริย์ให้สูงประดุจเทพเจ้า เข้าเฝ้าได้ยาก" },
+          { text: "ธรรมราชา", isCorrect: false, rationale: "ตัวเลือกนี้เน้นการใช้หลักธรรมในการปกครองแต่ไม่ใช่รากฐานความผูกพันดั้งเดิมแบบครอบครัวของไทย" },
+          { text: "ขัตติยราชา", isCorrect: false, rationale: "ตัวเลือกนี้ตามความหมายคือผู้จัดแบ่งปันไร่นา ไม่ใช่แนวคิดเชิงโครงสร้างครอบครัวดั้งเดิม" }
+        ],
+        hint: "ความสัมพันธ์ที่ผู้ปกครองดูแลผู้ใต้ปกครองดั่งคนในครอบครัว"
+      },
+      {
+        questionNumber: 3,
+        question: "เหตุผลหลักในการย้ายราชธานีจากฝั่งธนบุรีข้ามมาตั้งมั่นฝั่งตะวันออกของแม่น้ำเจ้าพระยาในสมัย ร.1 คือข้อใด?",
+        answerOptions: [
+          { text: "เพื่อรับชัยภูมิที่ดีกว่าในการป้องกันการรุกรานของข้าศึก", isCorrect: true, rationale: "ฝั่งตะวันออกมีแม่น้ำเจ้าพระยาช่วยเป็นคูเมืองธรรมชาติทางทิศตะวันตกและทิศใต้ ป้องกันการจู่โจมได้ดีกว่าฝั่งธนบุรีเดิม" },
+          { text: "เพื่อหาพื้นที่ราบทำการเพาะปลูกพืชเศรษฐกิจชนิดใหม่", isCorrect: false, rationale: "จุดประสงค์หลักในการสถาปนากรุงเทพฯ มุ่งเน้นไปที่ชัยภูมิและความมั่นคงทางการรบเป็นลำดับแรก" },
+          { text: "เพื่อประหยัดเงินถุงแดงที่เก็บสะสมไว้", isCorrect: false, rationale: "เงินถุงแดงสะสมขึ้นในสมัยรัชกาลที่ 3 เป็นหลัก ไม่ใช่เหตุผลในสมัยสถาปนากรุงรัตนโกสินทร์สมัย ร.1" },
+          { text: "เพื่อหลีกเลี่ยงการสู้รบกับกองทัพพม่าในสงครามเก้าทัพ", isCorrect: false, rationale: "สงครามเกิดขึ้นหลังจากสถาปนากรุงแล้ว การย้ายที่ตั้งเป็นการเตรียมพร้อมเพื่อรับศึกอย่างเต็มประสิทธิภาพ ไม่ใช่การเลี่ยงรบ" }
+        ],
+        hint: "พิจารณาข้อดีเรื่องที่ตั้งแม่น้ำและการป้องกันความปลอดภัยของเมืองหลวง"
+      },
+      {
+        questionNumber: 4,
+        question: "ผลงานทางกฎหมายที่โปรดเกล้าฯ ให้รวบรวมชำระและประทับตราพระราชสีห์ พระคชสีห์ และบัวแก้ว ในสมัย ร.1 คือข้อใด?",
+        answerOptions: [
+          { text: "กฎหมายตราสามดวง", isCorrect: true, rationale: "การชำระกฎหมายครั้งใหญ่ในรัชกาลที่ 1 นำมาประทับตราของสมุหนายก สมุหกลาโหม และพระคลัง เรียกว่ากฎหมายตราสามดวง" },
+          { text: "กฎมณเฑียรบาลโบราณ", isCorrect: false, rationale: "นี่คือกฎระเบียบที่มีอยู่แล้วตั้งแต่สมัยอยุธยา รัชกาลที่ 1 นำมาชำระใหม่รวมเป็นส่วนหนึ่งของตราสามดวง" },
+          { text: "ธรรมนูญลักษณะนคราภิบาล", isCorrect: false, rationale: "นี่คือธรรมนูญสำหรับการทดลองสร้างดุสิตธานีของรัชกาลที่ 6 เพื่อประชาธิปไตย" },
+          { text: "กฎหมายโจรห้าเส้น", isCorrect: false, rationale: "นี่คือกฎหมายความรับผิดชอบรักษาความสงบของชุมชนรอบบ้านในรัชสมัยรัชกาลที่ 3" }
+        ],
+        hint: "ชื่อเรียกกฎหมายสอดคล้องกับตราประทับของทั้ง 3 ฝ่ายหลักที่คุมทั่วแผ่นดิน"
+      },
+      {
+        questionNumber: 5,
+        question: "วรรณคดีเรื่อง 'อิเหนา' ได้รับการยกย่องจากวรรณคดีสโมสรใน พ.ศ. 2459 ว่าเป็นยอดของบทละครประเภทใด?",
+        answerOptions: [
+          { text: "บทละครรำ", isCorrect: true, rationale: "วรรณคดีสโมสรยกย่อง 'อิเหนา' พระราชนิพนธ์ในรัชกาลที่ 2 ว่าเป็นยอดของจินตกวีนิพนธ์ทางด้านละครรำหลวง" },
+          { text: "บทละครพูดคำฉันท์", isCorrect: false, rationale: "ยอดของบทละครพูดคำฉันท์คือเรื่อง 'มัทนะพาธา' พระราชนิพนธ์ในรัชกาลที่ 6" },
+          { text: "บทเสภาเรื่องยาว", isCorrect: false, rationale: "บทเสภามีเรื่องเด่นคือขุนช้างขุนแผน ไม่ใช่อิเหนาซึ่งจัดเป็นบทละครรำ" },
+          { text: "บทพากย์โขนเชิงคลาสสิก", isCorrect: false, rationale: "บทพากย์โขนชุดเอราวัณได้รับการยอมรับว่าไพเราะ แต่ไม่ใช่กลุ่มบทละครรำตามมติสมาคม" }
+        ],
+        hint: "การแสดงดนตรีในราชสำนักที่เน้นการปรับปรุงลีลาร่ายรำประณีตสวยงาม"
+      },
+      {
+        questionNumber: 6,
+        question: "ธงชาติไทยที่มีรูปช้างเผือกเอกอยู่กลางวงจักรประดับในธงพื้นแดง เกิดขึ้นครั้งแรกในรัชสมัยใด?",
+        answerOptions: [
+          { text: "รัชกาลที่ 2", isCorrect: true, rationale: "รัชกาลที่ 2 ได้ช้างเผือกคู่บารมีถึง 3 ช้าง จึงโปรดให้เพิ่มรูปช้างเผือกในวงจักรลงบนธงสีแดง เพื่อใช้เป็นสัญลักษณ์เรือกำปั่นค้าขาย" },
+          { text: "รัชกาลที่ 1", isCorrect: false, rationale: "รัชกาลที่ 1 ใช้ธงพื้นแดงมีวงจักรสีขาวตรงกลาง แต่ยังไม่มีรูปช้างเผือกอยู่ข้างใน" },
+          { text: "รัชกาลที่ 4", isCorrect: false, rationale: "รัชกาลที่ 4 โปรดเกล้าฯ ให้ถอดวงจักรออก เหลือเพียงช้างเผือกสีขาวบนพื้นแดงเฉียบคม" },
+          { text: "รัชกาลที่ 6", isCorrect: false, rationale: "รัชกาลที่ 6 ทรงเปลี่ยนจากธงช้างเผือกเป็นธงไตรรงค์ห้าแถบสีดังเช่นในปัจจุบัน" }
+        ],
+        hint: "รัชสมัยที่ได้ช้างเผือกเอกคู่บารมีมาสู่เมืองไทยพร้อมกันถึง 3 ช้าง"
+      },
+      {
+        questionNumber: 7,
+        question: "ในรัชกาลที่ 3 การปฏิรูปเศรษฐกิจด้านภาษีแบบใดที่ทำให้รายได้รัฐมั่นคง ผ่านตัวแทนผู้เหมาประมูลผูกขาด?",
+        answerOptions: [
+          { text: "ระบบเจ้าภาษีนายอากร", isCorrect: true, rationale: "รัฐบาล ร.3 ใช้วิธีให้พ่อค้าประมูลรับเหมาผูกขาดการเก็บภาษีแต่ละประเภทไป นำส่งเงินแน่นอนให้ราชสำนักลดการรั่วไหล" },
+          { text: "หอรัษฎากรพิพัฒน์", isCorrect: false, rationale: "หอรัษฎากรพิพัฒน์จัดตั้งขึ้นในสมัยรัชกาลที่ 5 เพื่อรวมอำนาจการเงินคลังและป้องกันการรั่วไหลของรายได้แผ่นดิน" },
+          { text: "การรวมศูนย์การเงินผ่านระบบ IMF", isCorrect: false, rationale: "IMF เป็นองค์กรการเงินสากลที่เข้ามาในสมัยรัชกาลที่ 9 ยุควิกฤตเศรษฐกิจ พ.ศ. 2540 ไม่เกี่ยวข้องกัน" },
+          { text: "การค้าส่งสำเภาหลวงแบบผูกขาดสินค้า", isCorrect: false, rationale: "การผูกขาดค้าเรือสำเภาของรัฐเป็นวิธีดั้งเดิม แต่ถูกยกเลิกไปในเวลาต่อมาจากการทำสนธิสัญญาเบาว์ริง" }
+        ],
+        hint: "คำเรียกพ่อค้าเอกชนที่มาประมูลผูกขาดการรับสิทธิ์เก็บเงินเข้าราชสำนัก"
+      },
+      {
+        questionNumber: 8,
+        question: "เงินจากการค้าเรือสำเภาของรัชกาลที่ 3 ที่สะสมไว้ และได้ใช้กู้บ้านเมืองในวิกฤตการณ์ ร.ศ. 112 คืออะไร?",
+        answerOptions: [
+          { text: "เงินถุงแดง", isCorrect: true, rationale: "เงินถุงแดงเป็นเงินกำไรค้าสำเภาส่วนพระองค์ ร.3 ที่เก็บรักษาไว้ข้างพระที่นั่ง และช่วยรักษาความมั่นคงในวิกฤต ร.ศ. 112" },
+          { text: "เงินกษาปณ์อัฐทองแดง", isCorrect: false, rationale: "อัฐทองแดงเป็นอัฐดีบุกและทองแดงที่ ร.4 สถาปนาใช้แทนเบี้ยหอย ไม่ใช่เงินสะสมส่วนตัวกู้ชาติ" },
+          { text: "เงินพดด้วงพระมหามงกุฎ", isCorrect: false, rationale: "เงินพดด้วงใช้ทั่วไปในตลาดการค้าโบราณ ไม่ใช่กองเงินถุงแดงกู้บ้านกู้เมืองตามที่ระบุในบันทึกพงศาวดาร" },
+          { text: "เงินอารามหลวงพาสินค้า", isCorrect: false, rationale: "ไม่มีคำศัพท์ชื่อเงินประเภทนี้ในประวัติศาสตร์สยามและการพัฒนาเศรษฐกิจ" }
+        ],
+        hint: "มองหาชื่อเรียกตามสีของบรรจุภัณฑ์ใส่ทองคำของหลวงในอดีต"
+      },
+      {
+        questionNumber: 9,
+        question: "เซอร์จอห์น เบาว์ริง เข้ามาเจรจาทำสนธิสัญญาไมตรีและพาณิชย์ในสยามเมื่อวันที่ 18 เมษายน พ.ศ. 2398 ในรัชสมัยใด?",
+        answerOptions: [
+          { text: "รัชกาลที่ 4", isCorrect: true, rationale: "รัชกาลที่ 4 ทรงต้อนรับเซอร์จอห์น เบาว์ริง และทำสนธิสัญญาเบาว์ริงซึ่งเปิดสยามเข้าสู่ระบบการค้าเสรีกับนานาชาติ" },
+          { text: "รัชกาลที่ 3", isCorrect: false, rationale: "ในสมัย ร.3 สยามได้ทำสนธิสัญญากับอังกฤษชื่อว่า สนธิสัญญาเบอร์นีย์ (พ.ศ. 2369) ไม่ใช่เบาว์ริง" },
+          { text: "รัชกาลที่ 5", isCorrect: false, rationale: "ในสมัย ร.5 ทรงก้าวหน้ารับรากฐานและสืบทอดสัญญา แต่การเจรจากับเบาว์ริงเสร็จสิ้นลงในสมัยก่อนหน้า" },
+          { text: "รัชกาลที่ 6", isCorrect: false, rationale: "รัชกาลที่ 6 ทรงส่ง ดร.ฟรานซีส บี แซยร์ ไปเจรจาติดต่อกับประเทศต่างๆ เพื่อขอ 'แก้ไข' และยกเลิกข้อผูกมัดที่ไม่เป็นธรรม" }
+        ],
+        hint: "ทรงเป็นกษัตริย์ผู้ผนวชศึกษาวิทยาการและภาษาตะวันตกอย่างรอบรู้เป็นเวลา 27 ปี"
+      },
+      {
+        questionNumber: 10,
+        question: "เหตุการณ์ทางวิทยาศาสตร์ที่ รัชกาลที่ 4 คำนวณพยากรณ์ล่วงหน้า 2 ปีว่าจะเกิดขึ้นในวันที่ 18 สิงหาคม พ.ศ. 2411 ณ ตำบลหว้ากอ คืออะไร?",
+        answerOptions: [
+          { text: "สุริยุปราคาเต็มดวง", isCorrect: true, rationale: "ทรงคำนวณพยากรณ์การเกิดสุริยุปราคาเต็มดวงอย่างแม่นยำทุกขั้นตอน จนได้รับการถวายพระราชสมัญญานาม 'พระบิดาแห่งวิทยาศาสตร์ไทย'" },
+          { text: "จันทรุปราคาชนิดเงาเต็มดวง", isCorrect: false, rationale: "จันทรุปราคาเป็นปรากฏการณ์ของดวงจันทร์ แต่ที่หว้ากอเป็นการปิดบังดวงอาทิตย์ในเวลากลางวันอย่างสมบูรณ์" },
+          { text: "ดาวหางโคจรเฉียดน่านฟ้าสยาม", isCorrect: false, rationale: "มีเหตุการณ์ดาวหางปรากฏใน พ.ศ. 2403 จริง แต่เหตุการณ์ประวัติศาสตร์ที่ตำบลหว้ากอคือสุริยุปราคา" },
+          { text: "พายุสุริยะเหนือน่านฟ้าไทย", isCorrect: false, rationale: "ในสมัยนั้นยังไม่มีวิชาคำนวณพายุสุริยะ ปรากฏการณ์คำนวณอันยิ่งใหญ่ของสากลคือการเคลื่อนผ่านของเงาดวงจันทร์ทับอาทิตย์" }
+        ],
+        hint: "ปรากฏการณ์ดวงอาทิตย์ถูกดวงจันทร์บดบังมืดมิดในเวลากลางวันอย่างน่าอัศจรรย์"
+      },
+      {
+        questionNumber: 11,
+        question: "เพื่อความเจริญก้าวหน้าและเพิ่มเสรีภาพของประชาชนไทย รัชกาลที่ 5 ทรงปฏิรูปยกเลิกระบบดั้งเดิมใดบ้าง?",
+        answerOptions: [
+          { text: "ระบบทาสและระบบไพร่", isCorrect: true, rationale: "ทรงเลิกทาสด้วยความอะลุ่มอล่วยให้ทุกฝ่ายได้ปรับตัว และยกเลิกระบบไพร่ (การเกณฑ์แรงงานชาย) เปิดโอกาสให้คนไทยทำมาหากินเสรี" },
+          { text: "ระบบจตุสดมภ์ดั้งเดิมและธรรมราชา", isCorrect: false, rationale: "จตุสดมภ์เป็นเพียงโครงสร้างราชการ ส่วนธรรมราชาคือหลักธรรม ไม่ใช่เรื่องเสรีภาพความเป็นไทของบุคคล" },
+          { text: "ระบบเจ้าภาษีนายอากรทั้งหมด", isCorrect: false, rationale: "นี่เป็นวิธีเก็บภาษี แม้ทรงตั้งหอรัษฎากรพิพัฒน์ขึ้นมาดูแล แต่ประเด็นความเสมอภาคและพัฒนาคนอย่างแท้จริงคือการเลิกทาสไพร่" },
+          { text: "ระบบโจรห้าเส้นและกลองร้องทุกข์", isCorrect: false, rationale: "เป็นระบบการระงับข้อพิพาทและป้องกันโจรขโมยรอบบ้านในสมัย ร.3" }
+        ],
+        hint: "คำเรียกกลุ่มคนที่ไม่มีอิสระในร่างกายและถูกผูกมัดด้วยแรงงานตามกฎหมายโบราณ"
+      },
+      {
+        questionNumber: 12,
+        question: "การสถาปนาเมืองจำลอง 'ดุสิตธานี' ในรัชกาลที่ 6 มีจุดมุ่งหมายเพื่อทดลองระบอบการปกครองประเภทใด?",
+        answerOptions: [
+          { text: "ประชาธิปไตย", isCorrect: true, rationale: "ทรงตั้งดุสิตธานีขึ้นเพื่อทดลองการเลือกตั้งท้องถิ่นและนิติบัญญัติ เพื่อปูรากฐานความเข้าใจระบอบประชาธิปไตยแก่ประชาชน" },
+          { text: "สมบูรณาญาสิทธิราชย์ขั้นสูง", isCorrect: false, rationale: "สมบูรณาญาสิทธิราชย์เป็นระบอบที่มีอยู่ดั้งเดิม ไม่จำเป็นต้องทดลองในเมืองจำลองดุสิตธานีแต่อย่างใด" },
+          { text: "สังคมนิยมพึ่งพาตนเอง", isCorrect: false, rationale: "สยามไม่ได้นำระบบสังคมนิยมเข้ามาใช้ทดลองในเมืองจำลองดุสิตธานีแต่อย่างใด" },
+          { text: "ฟิวดัลขุนนางครองแคว้น", isCorrect: false, rationale: "ระบบศักดินาครองแคว้นเป็นระบบเก่า การสร้างดุสิตธานีเน้นสากลและการจัดตั้งพรรคการเมือง" }
+        ],
+        hint: "ระบบที่ยอมรับอำนาจสูงสุดของปวงชนและมีสภาเทศบาลในการปกครองตนเอง"
+      },
+      {
+        questionNumber: 13,
+        question: "ในวันที่ 27 มิถุนายน พ.ศ. 2475 รัชกาลที่ 7 ทรงลงพระปรมาภิไธยโดยทรงเขียนเติมคำใดลงในรัฐธรรมนูญฉบับแรก?",
+        answerOptions: [
+          { text: "ชั่วคราว", isCorrect: true, rationale: "ทรงเขียนเติมคำว่า 'ชั่วคราว' เพื่อแสดงถึงระเบียบที่ต้องปรับปรุงแก้ไขเมื่อเปิดสภาประชุมสากลเพื่อให้รอบคอบ" },
+          { text: "ถาวรและสิ้นสุด", isCorrect: false, rationale: "ตัวเลือกนี้ตรงข้ามกับเจตจำนงที่ทรงต้องการให้ปรับแก้ไขอย่างรอบคอบร่วมกันในภายหลัง" },
+          { text: "เสมอภาคหญิงชาย", isCorrect: false, rationale: "แม้ทรงสนับสนุนเสรีภาพการศึกษาของนิสิตสตรี แต่ไม่ใช่คำจำเพาะที่ทรงเติมลงบนรัฐธรรมนูญฉบับแรก" },
+          { text: "สมบูรณาญาสิทธิราชย์เด่น", isCorrect: false, rationale: "นี่เป็นระบอบเก่า การเติมคำนี้ขัดแย้งกับหลักการเปลี่ยนแปลงสู่ระบอบรัฐสภาอย่างสิ้นเชิง" }
+        ],
+        hint: "คำที่ระบุว่าใช้เฉพาะหน้าไปก่อน เพื่อเตรียมร่างฉบับหลักที่ถูกต้องครบถ้วนถัดไป"
+      },
+      {
+        questionNumber: 14,
+        question: "รัชกาลที่ 8 ทรงเสด็จประพาสสถานที่ใดเพื่อช่วยประสานรอยร้าวและลดข้อพิพาทความขัดแย้งระหว่างคนไทยและคนจีน?",
+        answerOptions: [
+          { text: "สำเพ็ง", isCorrect: true, rationale: "การเสด็จประพาสสำเพ็งได้รับการต้อนรับอย่างล้นหลาม ช่วยลดความตึงเครียดและประสานความปรองดองสองเชื้อชาติอย่างได้ผล" },
+          { text: "ปากลัด นครเขื่อนขันธ์", isCorrect: false, rationale: "ที่นี่เป็นเมืองท่าป้อมปราการที่ ร.2 โปรดเกล้าฯ ให้จัดตั้งขึ้นเพื่อเป็นที่ตั้งของครัวมอญปทุมธานี" },
+          { text: "สวนไกลกังวล หัวหิน", isCorrect: false, rationale: "นี่คือที่ประทับส่วนพระองค์ของ ร.7 และเป็นที่เริ่มสภาบำรุงทะเลฝั่งตะวันตก" },
+          { text: "โรงพยาบาลไฮเดลแบร์ก", isCorrect: false, rationale: "นี่เป็นโรงพยาบาลในประเทศเยอรมนีอันเป็นสถานที่ประสูติของรัชกาลที่ 8 ไม่ใช่ที่เสด็จเพื่อคลายความขัดแย้ง" }
+        ],
+        hint: "ย่านการค้าคนจีนที่ใหญ่และมีบทบาทสำคัญที่สุดของกรุงเทพมหานคร"
+      },
+      {
+        questionNumber: 15,
+        question: "รางวัลเกียรติยศสูงสุดด้านการพัฒนุษย์ (Lifetime Achievement Award) ทูลเกล้าฯ ถวาย ร.9 โดยเลขาธิการ UN ท่านใด?",
+        answerOptions: [
+          { text: "โคฟี อันนัน (Kofi Annan)", isCorrect: true, rationale: "นายโคฟี อันนัน เลขาธิการสหประชาชาติ เดินทางมาทูลเกล้าฯ ถวายรางวัลนี้ด้วยตนเองแด่ ร.9 เมื่อวันที่ 26 พฤษภาคม พ.ศ. 2549" },
+          { text: "เซอร์จอห์น เบาว์ริง", isCorrect: false, rationale: "ท่านนี้เป็นทูตอังกฤษยุค ร.4 ไม่เกี่ยวข้องกับหน่วยงานพัฒนาขององค์การสหประชาชาติ" },
+          { text: "ลอร์ด หลุยส์ เมานต์แบตเทน", isCorrect: false, rationale: "ท่านนี้เป็นผู้บัญชาการทหารพันธมิตรร่วมตรวจพลรบในสงครามโลกครั้งที่ 2 กับ ร.8" },
+          { text: "จอห์น ครอว์เฟิด", isCorrect: false, rationale: "ท่านนี้เป็นทูตเจรจาการค้าชาวอังกฤษในสมัย ร.2 และ ร.3 ไม่เกี่ยวกับ UN" }
+        ],
+        hint: "เลขาธิการชาวกานาผู้มีบทบาทสำคัญด้านสันติภาพและการพัฒนาอย่างยั่งยืนระดับโลก"
+      }
+    ];
+
+    // Exponential backoff API fetch wrapper for Gemini
+    const callGeminiModel = async (prompt, systemInstruction = "") => {
+      const apiKey = ""; // Left empty for automatic Canvas injection at runtime
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+      
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        systemInstruction: systemInstruction ? {
+          parts: [{ text: systemInstruction }]
+        } : undefined
+      };
+
+      let delay = 1000;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Gemini API HTTP Error Status: ${response.status}`);
+          }
+          
+          const result = await response.json();
+          const generatedText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (generatedText) {
+            return generatedText;
+          }
+          throw new Error("Invalid response format or empty text returned.");
+        } catch (error) {
+          console.warn(`Gemini Attempt ${attempt + 1} failed. Retrying...`, error);
+          if (attempt === 2) {
+            throw error; // Propagate after exhaustion
+          }
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 2;
+        }
+      }
+    };
+
+    // Helper to render simple styled paragraph and bold text in React
+    const formatAIResponse = (text) => {
+      if (!text) return null;
+      return text.split('\n').map((paragraph, index) => {
+        if (!paragraph.trim()) return null;
+        
+        // Match Markdown bolding **text**
+        const tokens = paragraph.split(/(\*\*.*?\*\*)/g);
+        return (
+          <p key={index} className="text-xs text-slate-700 leading-relaxed mb-2.5">
+            {tokens.map((token, j) => {
+              if (token.startsWith('**') && token.endsWith('**')) {
+                return (
+                  <strong key={j} className="font-extrabold text-amber-950">
+                    {token.slice(2, -2)}
+                  </strong>
+                );
+              }
+              return token;
+            })}
+          </p>
+        );
+      });
+    };
+
+    function App() {
+      const [currentTab, setCurrentTab] = useState("home"); // home, kings, quiz, ai_tutor, library
+      const [librarySubTab, setLibrarySubTab] = useState("cards"); // cards, search, bookmarks
+      const [bookmarks, setBookmarks] = useState(() => {
+        const saved = localStorage.getItem("chakri_bookmarks");
+        return saved ? JSON.parse(saved) : [];
+      });
+      const [activeKing, setActiveKing] = useState(null);
+      
+      // Quiz States
+      const [quizIndex, setQuizIndex] = useState(0);
+      const [selectedAnswer, setSelectedAnswer] = useState(null);
+      const [showRationale, setShowRationale] = useState(false);
+      const [quizScore, setQuizScore] = useState(0);
+      const [quizCompleted, setQuizCompleted] = useState(false);
+      
+      // Flashcard and Search States
+      const [searchQuery, setSearchQuery] = useState("");
+      const [cardIndex, setCardIndex] = useState(0);
+      const [isFlipped, setIsFlipped] = useState(false);
+
+      // AI Tutor States
+      const [aiQuery, setAiQuery] = useState("");
+      const [aiHistory, setAiHistory] = useState([
+        {
+          role: "assistant",
+          text: "สวัสดีครับ ยินดีต้อนรับสู่ 'ห้องเรียนนักประวัติศาสตร์จักรี' คุณสามารถถามคำถามทางประวัติศาสตร์ ข้อมูลรัชกาลต่างๆ หรือขอให้อธิบายแนวคิดเชิงลึกได้เลยครับ!"
+        }
+      ]);
+      const [isAiLoading, setIsAiLoading] = useState(false);
+      const chatEndRef = useRef(null);
+
+      useEffect(() => {
+        localStorage.setItem("chakri_bookmarks", JSON.stringify(bookmarks));
+      }, [bookmarks]);
+
+      useEffect(() => {
+        // Auto scroll to latest chat messages
+        if (chatEndRef.current) {
+          chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, [aiHistory, isAiLoading]);
+
+      const toggleBookmark = (id, type) => {
+        const key = `${type}-${id}`;
+        setBookmarks(prev => {
+          if (prev.includes(key)) {
+            return prev.filter(item => item !== key);
+          } else {
+            return [...prev, key];
+          }
+        });
+      };
+
+      const isBookmarked = (id, type) => {
+        return bookmarks.includes(`${type}-${id}`);
+      };
+
+      // Search matching logic across textbook
+      const searchResults = useMemo(() => {
+        if (!searchQuery.trim()) return [];
+        const q = searchQuery.toLowerCase();
+        const results = [];
+
+        kingsList.forEach(king => {
+          let matched = false;
+          let matchText = "";
+          if (king.fullName.toLowerCase().includes(q) || king.title.toLowerCase().includes(q)) {
+            matched = true;
+            matchText = king.fullName;
+          } else {
+            const matchedFact = king.keyFacts.find(fact => 
+              fact.label.toLowerCase().includes(q) || fact.val.toLowerCase().includes(q)
+            );
+            if (matchedFact) {
+              matched = true;
+              matchText = `${matchedFact.label}: ${matchedFact.val}`;
+            }
+          }
+          if (matched) {
+            results.push({ type: "king", id: king.id, title: king.title, subtitle: king.fullName, snippet: matchText, raw: king });
+          }
+        });
+
+        flashcardsData.forEach((card, idx) => {
+          if (card.term.toLowerCase().includes(q) || card.definition.toLowerCase().includes(q)) {
+            results.push({ type: "card", id: idx, title: card.term, subtitle: "การ์ดคำศัพท์", snippet: card.definition, raw: card });
+          }
+        });
+
+        return results;
+      }, [searchQuery]);
+
+      const handleAnswerSelect = (optionIdx) => {
+        if (selectedAnswer !== null) return;
+        setSelectedAnswer(optionIdx);
+        setShowRationale(true);
+        if (quizQuestions[quizIndex].answerOptions[optionIdx].isCorrect) {
+          setQuizScore(prev => prev + 1);
+        }
+      };
+
+      const handleNextQuestion = () => {
+        setSelectedAnswer(null);
+        setShowRationale(false);
+        if (quizIndex < quizQuestions.length - 1) {
+          setQuizIndex(prev => prev + 1);
+        } else {
+          setQuizCompleted(true);
+        }
+      };
+
+      const resetQuiz = () => {
+        setQuizIndex(0);
+        setSelectedAnswer(null);
+        setShowRationale(false);
+        setQuizScore(0);
+        setQuizCompleted(false);
+      };
+
+      const handleSendAiMessage = async (customPrompt = "") => {
+        const queryToSend = customPrompt || aiQuery;
+        if (!queryToSend.trim()) return;
+
+        // Append user query to chat thread
+        setAiHistory(prev => [...prev, { role: "user", text: queryToSend }]);
+        setAiQuery("");
+        setIsAiLoading(true);
+
+        const systemInstruction = "คุณคือ 'ศาสตราจารย์สถาบันพระมหากษัตริย์และประวัติศาสตร์จักรี' นักประวัติศาสตร์ชาวไทยผู้เชี่ยวชาญ คอยแนะนำข้อมูลแก่นักเรียน นักศึกษา ตอบคำถามอย่างละเอียด ถูกต้องตามวิชาการประวัติศาสตร์สยาม นอบน้อม สุภาพ อ้างอิงประเด็น ร.1 - ร.9 และแนวคิดความเชื่อ (บิดา-บุตร, พราหมณ์-ฮินดู, พุทธศาสนา) ให้ยกตัวอย่างชัดเจนสอดคล้องกับคอร์สเรียนวิชาสังคมศึกษาไทย";
+        
+        try {
+          const aiResponse = await callGeminiModel(queryToSend, systemInstruction);
+          setAiHistory(prev => [...prev, { role: "assistant", text: aiResponse }]);
+        } catch (error) {
+          setAiHistory(prev => [...prev, { 
+            role: "assistant", 
+            text: "ขออภัยเป็นอย่างยิ่งครับ เกิดความผิดพลาดชั่วคราวในการประมวลผลข้อมูลผ่านเครือข่ายความปลอดภัย กรุณาลองใหม่อีกครั้งครับ" 
+          }]);
+        } finally {
+          setIsAiLoading(false);
+        }
+      };
+
+      // Auto-trigger detailed AI Explainer for Quiz Questions
+      const handleAskAiAboutQuiz = (questionText, rationaleText) => {
+        setCurrentTab("ai_tutor");
+        const prompt = `ช่วยอธิบายความรู้ประวัติศาสตร์เพิ่มเติมเกี่ยวกับข้อสอบข้อนี้อย่างลึกซึ้ง: "${questionText}" (คำอธิบายเบื้องต้น: ${rationaleText}) ให้เบื้องหลังทางประวัติศาสตร์และรายละเอียดเสริมเพื่อให้จดจำไปสอบได้ดียิ่งขึ้น`;
+        handleSendAiMessage(prompt);
+      };
+
+      return (
+        <div className="flex flex-col h-full bg-slate-50 relative justify-between">
+          
+          {/* Header Area */}
+          <header className="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 text-white py-4 px-4 shadow-md flex items-center justify-between rounded-t-3xl">
+            <div className="flex items-center gap-2">
+              <div className="bg-white/20 p-1.5 rounded-xl">
+                <Icons.Crown className="w-6 h-6 text-white"/>
+              </div>
+              <div>
+                <h1 className="font-bold text-sm leading-tight">คลังปัญญา ราชวงศ์จักรี</h1>
+                <p className="text-xs text-yellow-100 royal-font">Chakri Dynasty Companion</p>
+              </div>
+            </div>
+            {/* Quick AI Sparks Button */}
+            <button 
+              onClick={() => setCurrentTab("ai_tutor")}
+              className="relative bg-white/15 p-2 rounded-xl active:scale-95 transition-transform flex items-center gap-1 font-bold text-xs"
+            >
+              <Icons.Sparkles className="w-4 h-4 text-yellow-200" />
+              <span>ถาม AI</span>
+            </button>
+          </header>
+
+          {/* Main App Screens */}
+          <main className="flex-1 overflow-y-auto px-4 py-3 no-scrollbar pb-24">
+            
+            {/* Tab 1: Home Screen (Belief pillars) */}
+            {currentTab === "home" && (
+              <div className="space-y-4">
+                
+                {/* Intro Card */}
+                <div className="bg-white p-4 rounded-2xl border border-amber-100 shadow-sm relative overflow-hidden">
+                  <div className="absolute -right-6 -bottom-6 opacity-5">
+                    <Icons.Crown className="w-32 h-32 text-amber-600"/>
+                  </div>
+                  <h2 className="royal-font text-2xl font-bold text-amber-800 mb-1">{conceptData.title}</h2>
+                  <p className="text-xs text-slate-500 mb-3">วิชาสถาบันพระมหากษัตริย์ไทยกับโครงสร้างความเชื่อสยาม</p>
+                  <p className="text-sm text-slate-700 leading-relaxed bg-amber-50/50 p-3 rounded-xl border border-amber-50">
+                    {conceptData.intro}
+                  </p>
+                </div>
+
+                {/* 3 Pillars of Belief */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                    <span className="w-1.5 h-4 bg-amber-500 rounded-full inline-block"></span>
+                    แนวคิดทางสถาบันกษัตริย์ 3 ประการ
+                  </h3>
+                  {conceptData.pillars.map((item) => (
+                    <div key={item.id} className="bg-white p-3.5 rounded-xl border border-slate-100 shadow-sm flex gap-3 items-start">
+                      <div className="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                        {item.id}
+                      </div>
+                      <div className="space-y-0.5">
+                        <h4 className="text-sm font-semibold text-slate-800">{item.title}</h4>
+                        <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Conceptual Terms Explanation */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                    <span className="w-1.5 h-4 bg-amber-500 rounded-full inline-block"></span>
+                    ความหมายแห่งสัญลักษณ์ในประวัติศาสตร์ไทย
+                  </h3>
+                  <div className="grid grid-cols-1 gap-2.5">
+                    {conceptData.terms.map((term, idx) => (
+                      <div key={idx} className="bg-gradient-to-br from-white to-amber-50/20 p-3.5 rounded-xl border border-amber-100 shadow-sm space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-bold text-amber-800 royal-font text-[16px]">{term.name}</span>
+                          <span className="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-semibold">ศัพท์เฉพาะตำรา</span>
+                        </div>
+                        <p className="text-xs text-slate-600 leading-relaxed">{term.definition}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quick AI Suggestion Card */}
+                <div className="bg-gradient-to-r from-amber-600 to-amber-700 text-white p-4 rounded-2xl flex items-center justify-between shadow-sm">
+                  <div className="space-y-1">
+                    <h4 className="text-xs font-semibold text-yellow-300 flex items-center gap-1">
+                      <Icons.Sparkles className="w-4 h-4" />
+                      สงสัยเรื่องไหน ถาม AI ได้ทันที!
+                    </h4>
+                    <p className="text-[11px] text-amber-100">คุยกับผู้เชี่ยวชาญประวัติศาสตร์สยามแบบโต้ตอบ</p>
+                  </div>
+                  <button 
+                    onClick={() => setCurrentTab("ai_tutor")}
+                    className="bg-white text-amber-800 hover:bg-yellow-50 text-xs font-bold py-2 px-3 rounded-xl flex items-center gap-1 active:scale-95 transition-all"
+                  >
+                    ถามเลย
+                    <Icons.ArrowRight className="w-4 h-4"/>
+                  </button>
+                </div>
+
+              </div>
+            )}
+
+            {/* Tab 2: Kings Directory */}
+            {currentTab === "kings" && (
+              <div className="space-y-4">
+                
+                {/* Search Bar Shortcut */}
+                <div className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-2">
+                  <Icons.Search className="text-slate-400"/>
+                  <input 
+                    type="text" 
+                    placeholder="ค้นหาข้อมูลกษัตริย์ พระนาม หรือประวัติ..." 
+                    className="text-xs text-slate-700 w-full focus:outline-none"
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentTab("library");
+                      setLibrarySubTab("search");
+                    }}
+                  />
+                </div>
+
+                {/* Kings List cards */}
+                {!activeKing ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <span className="w-1.5 h-4 bg-amber-500 rounded-full inline-block"></span>
+                        ทำเนียบมหากษัตริย์ไทย (รัตนโกสินทร์)
+                      </h3>
+                      <span className="text-[10px] text-slate-400">เลือกองค์เพื่อเจาะลึก</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-2.5">
+                      {kingsList.map((king) => (
+                        <div 
+                          key={king.id}
+                          onClick={() => setActiveKing(king)}
+                          className="bg-white p-3.5 rounded-xl border border-slate-100 shadow-sm hover:border-amber-200 active:scale-[0.99] transition-all cursor-pointer flex justify-between items-center relative overflow-hidden"
+                        >
+                          <div className="space-y-1 z-10">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">{king.title}</span>
+                              <span className="text-[10px] text-slate-400 font-medium">{king.reign}</span>
+                            </div>
+                            <h4 className="text-sm font-bold text-slate-800 leading-tight">{king.fullName}</h4>
+                            <p className="text-[11px] text-slate-500 font-medium">{king.badge}</p>
+                          </div>
+                          <div className="flex items-center gap-1.5 shrink-0 z-10">
+                            {isBookmarked(king.id, "king") && (
+                              <span className="text-amber-500"><Icons.Bookmark className="w-4 h-4" fill="currentColor"/></span>
+                            )}
+                            <Icons.ChevronRight className="text-slate-300 w-5 h-5"/>
+                          </div>
+                          <div className="absolute right-3 -bottom-2 opacity-[0.03] text-amber-900 pointer-events-none">
+                            <Icons.Crown className="w-16 h-16"/>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  // Detailed view of a single King
+                  <div className="bg-white rounded-2xl border border-amber-100 shadow-sm overflow-hidden space-y-4">
+                    
+                    {/* Cover Area */}
+                    <div className="bg-gradient-to-br from-amber-800 to-amber-600 text-white p-5 space-y-2 relative">
+                      <button 
+                        onClick={() => setActiveKing(null)}
+                        className="absolute top-4 left-4 bg-white/10 hover:bg-white/20 text-white p-1.5 rounded-lg text-[10px] font-bold active:scale-95 transition-transform"
+                      >
+                        ย้อนกลับ
+                      </button>
+                      <button 
+                        onClick={() => toggleBookmark(activeKing.id, "king")}
+                        className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white p-1.5 rounded-lg active:scale-95 transition-transform"
+                      >
+                        <Icons.Bookmark className="w-4 h-4 text-white" fill={isBookmarked(activeKing.id, "king") ? "currentColor" : "none"} />
+                      </button>
+                      
+                      <div className="pt-6 space-y-1">
+                        <span className="text-[10px] font-bold text-amber-200 bg-amber-900/40 px-2 py-0.5 rounded-md inline-block">{activeKing.title}</span>
+                        <h3 className="royal-font text-2xl font-bold leading-tight">{activeKing.fullName}</h3>
+                        <p className="text-xs text-yellow-100">{activeKing.reign}</p>
+                        <span className="inline-block text-[10px] bg-yellow-500 text-amber-950 font-bold px-2.5 py-0.5 rounded-full mt-2">
+                          {activeKing.badge}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Content Detail List */}
+                    <div className="p-4 space-y-4">
+                      
+                      {/* AI integration button inside king details */}
+                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex justify-between items-center">
+                        <div className="space-y-0.5">
+                          <h5 className="text-xs font-bold text-amber-950 flex items-center gap-1">
+                            <Icons.Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                            อยากรู้ลึกกว่าวิชาการทั่วไป?
+                          </h5>
+                          <p className="text-[10px] text-slate-600">กดให้ AI สรุปแง่มุมพิเศษและข้อสอบเกี่ยวกับพระองค์</p>
+                        </div>
+                        <button 
+                          onClick={() => {
+                            setCurrentTab("ai_tutor");
+                            handleSendAiMessage(`ช่วยเล่าแง่มุมความรู้และข้อสอบประวัติศาสตร์ที่น่าสนใจเกี่ยวกับ ${activeKing.fullName} (${activeKing.title}) ให้ฟังหน่อยครับ`);
+                          }}
+                          className="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-3 py-2 rounded-lg active:scale-95 transition-transform"
+                        >
+                          วิเคราะห์ AI
+                        </button>
+                      </div>
+
+                      <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <Icons.Crown className="w-4 h-4 text-amber-500"/>
+                        สาระสำคัญตามคลังวิชาสถาบัน
+                      </h4>
+
+                      <div className="space-y-3.5">
+                        {activeKing.keyFacts.map((fact, idx) => (
+                          <div key={idx} className="space-y-1 bg-slate-50/70 p-3 rounded-xl border border-slate-100">
+                            <span className="text-xs font-bold text-amber-800 shrink-0 block">
+                              {fact.label}
+                            </span>
+                            <p className="text-xs text-slate-700 leading-relaxed">
+                              {fact.val}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="pt-2">
+                        <button 
+                          onClick={() => setActiveKing(null)}
+                          className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-3 px-4 rounded-xl active:scale-95 transition-all text-center block"
+                        >
+                          ย้อนกลับไปทำเนียบทั้งหมด
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
+                )}
+
+              </div>
+            )}
+
+            {/* Tab 3: Quiz Screen */}
+            {currentTab === "quiz" && (
+              <div className="space-y-4">
+                
+                {!quizCompleted ? (
+                  <div className="space-y-3">
+                    
+                    {/* Top Progress bar */}
+                    <div className="space-y-1 bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm">
+                      <div className="flex justify-between items-center text-xs font-bold">
+                        <span className="text-amber-600">ข้อสอบระดับเข้มข้น ({quizQuestions[quizIndex].questionNumber}/{quizQuestions.length})</span>
+                        <span className="text-slate-400">คะแนนสะสม: {quizScore}</span>
+                      </div>
+                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div 
+                          className="bg-amber-500 h-full transition-all duration-300"
+                          style={{ width: `${((quizIndex + 1) / quizQuestions.length) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+
+                    {/* Question Card */}
+                    <div className="bg-white p-4 rounded-2xl border border-amber-100 shadow-sm space-y-4">
+                      <h4 className="text-sm font-bold text-slate-800 leading-snug">
+                        {quizQuestions[quizIndex].question}
+                      </h4>
+                      
+                      <details className="bg-amber-50/50 p-2.5 rounded-xl border border-amber-100/50 cursor-pointer">
+                        <summary className="text-xs font-bold text-amber-800 list-none flex items-center justify-between select-none">
+                          💡 คำใบ้เพื่อช่วยวิเคราะห์
+                          <span className="text-[10px] text-amber-500">คลิกเปิด/ปิด</span>
+                        </summary>
+                        <p className="text-xs text-slate-600 mt-1.5 leading-relaxed bg-white p-2 rounded-lg border border-amber-100/30">
+                          {quizQuestions[quizIndex].hint}
+                        </p>
+                      </details>
+                    </div>
+
+                    {/* Answer Choices list */}
+                    <div className="space-y-2">
+                      {quizQuestions[quizIndex].answerOptions.map((opt, idx) => {
+                        let btnStyle = "bg-white border-slate-100 text-slate-700 hover:border-amber-200";
+                        if (selectedAnswer !== null) {
+                          if (opt.isCorrect) {
+                            btnStyle = "bg-emerald-50 border-emerald-500 text-emerald-950 font-semibold";
+                          } else if (selectedAnswer === idx) {
+                            btnStyle = "bg-rose-50 border-rose-500 text-rose-950";
+                          } else {
+                            btnStyle = "bg-slate-50 border-slate-100 text-slate-400 opacity-60";
+                          }
+                        }
+
+                        return (
+                          <button 
+                            key={idx}
+                            onClick={() => handleAnswerSelect(idx)}
+                            disabled={selectedAnswer !== null}
+                            className={`w-full p-3.5 rounded-xl border text-xs text-left active:scale-[0.99] transition-all flex items-center justify-between ${btnStyle}`}
+                          >
+                            <span>{opt.text}</span>
+                            {selectedAnswer !== null && opt.isCorrect && (
+                              <span className="text-emerald-600 font-bold">✓ ถูก</span>
+                            )}
+                            {selectedAnswer !== null && selectedAnswer === idx && !opt.isCorrect && (
+                              <span className="text-rose-600 font-bold">✗ ผิด</span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Explanation rationale panel & AI Explainer */}
+                    {showRationale && (
+                      <div className="bg-slate-800 text-slate-100 p-4 rounded-2xl space-y-3.5 border border-slate-700">
+                        <div className="space-y-1">
+                          <h5 className="text-xs font-bold text-yellow-300 flex items-center gap-1">
+                            🛡️ บทวิเคราะห์เชิงลึก:
+                          </h5>
+                          <p className="text-xs leading-relaxed text-slate-200">
+                            {quizQuestions[quizIndex].answerOptions[selectedAnswer].rationale}
+                          </p>
+                        </div>
+                        
+                        {/* Gemini AI Action Hook */}
+                        <div className="bg-slate-700 rounded-xl p-3 border border-slate-600 flex justify-between items-center">
+                          <div className="space-y-0.5">
+                            <h6 className="text-[11px] font-bold text-yellow-200 flex items-center gap-1">
+                              <Icons.Sparkles className="w-3.5 h-3.5" />
+                              ต้องการข้อมูลเพิ่มเติม?
+                            </h6>
+                            <p className="text-[10px] text-slate-300">ถาม AI ขยายความประเด็นนี้ทันที</p>
+                          </div>
+                          <button 
+                            onClick={() => handleAskAiAboutQuiz(
+                              quizQuestions[quizIndex].question,
+                              quizQuestions[quizIndex].answerOptions[selectedAnswer].rationale
+                            )}
+                            className="bg-amber-500 hover:bg-amber-600 text-white font-bold text-[10px] px-3 py-2 rounded-lg transition-colors pulse-gold-button"
+                          >
+                            ถาม AI เพิ่มเติม
+                          </button>
+                        </div>
+
+                        <div className="pt-1">
+                          <button 
+                            onClick={handleNextQuestion}
+                            className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-2.5 px-4 rounded-xl active:scale-95 transition-all text-center"
+                          >
+                            {quizIndex < quizQuestions.length - 1 ? "ทำข้อต่อไป" : "ดูผลคะแนนสุทธิ"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                  </div>
+                ) : (
+                  // Quiz Completed Summary screen
+                  <div className="bg-white p-5 rounded-2xl border border-amber-100 shadow-md text-center space-y-5">
+                    <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto text-amber-700">
+                      <Icons.CheckSquare className="w-10 h-10"/>
+                    </div>
+                    
+                    <div className="space-y-1">
+                      <h3 className="royal-font text-2xl font-bold text-amber-800">เสร็จสิ้นแบบทดสอบแล้ว!</h3>
+                      <p className="text-xs text-slate-400">คุณทำแบบทดสอบวิชาสถาบันพระมหากษัตริย์ไทยได้ยอดเยี่ยม</p>
+                    </div>
+
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 inline-block px-8 py-6">
+                      <span className="text-xs text-slate-400 font-bold block mb-1">คะแนนที่คุณทำได้</span>
+                      <span className="text-4xl font-extrabold text-amber-600">
+                        {quizScore} <span className="text-xs text-slate-400">/ {quizQuestions.length}</span>
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-600 leading-relaxed max-w-[280px] mx-auto">
+                      {quizScore >= (quizQuestions.length * 0.8) 
+                        ? "สุดยอด! คุณมีความเข้าใจในบทเรียนระดับยอดเยี่ยม คลังปัญญานี้จะช่วยให้คุณจำขึ้นใจได้อย่างแม่นยำเพื่อการสอบ" 
+                        : "พยายามได้ดีมาก! แนะนำให้สลับไปเรียนรู้ผ่านประวัติตามทำเนียบและการ์ดคำศัพท์ หรือลองถาม AI เพิ่มเติมในเรื่องที่คุณตอบผิด"}
+                    </p>
+
+                    <div className="pt-2 space-y-2">
+                      <button 
+                        onClick={resetQuiz}
+                        className="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-3 px-4 rounded-xl active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                      >
+                        <Icons.RotateCcw className="w-4 h-4"/>
+                        ทำข้อสอบใหม่อีกครั้ง
+                      </button>
+                    </div>
+
+                  </div>
+                )}
+
+              </div>
+            )}
+
+            {/* Tab 4: AI Tutor Chat (NEW) */}
+            {currentTab === "ai_tutor" && (
+              <div className="flex flex-col h-full space-y-3 min-h-[62vh]">
+                
+                {/* Header Information */}
+                <div className="bg-gradient-to-r from-amber-800 to-amber-900 text-white p-3 rounded-2xl border border-amber-700 shadow-sm flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <h4 className="text-xs font-bold text-yellow-300 flex items-center gap-1">
+                      <Icons.Sparkles className="w-3.5 h-3.5" />
+                      คุยกับศาสตราจารย์ประวัติศาสตร์ AI
+                    </h4>
+                    <p className="text-[10px] text-slate-300">ขับเคลื่อนด้วย Gemini 3.1 Flash</p>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      setAiHistory([
+                        {
+                          role: "assistant",
+                          text: "ประวัติการสนทนาถูกล้างเรียบร้อยแล้ว มีข้อสงสัยเรื่องใหม่ ๆ สามารถแจ้งได้เลยครับ!"
+                        }
+                      ]);
+                    }}
+                    className="text-[10px] bg-white/10 hover:bg-white/20 px-2 py-1 rounded-lg text-slate-200 transition-colors"
+                  >
+                    ล้างแชท
+                  </button>
+                </div>
+
+                {/* Suggestions Pills to quickly test AI */}
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold text-slate-400">💡 หัวข้อแนะนำด่วน:</span>
+                  <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar text-[11px]">
+                    <button 
+                      onClick={() => handleSendAiMessage("เล่ารายละเอียดเรื่อง 'เงินถุงแดง' ในช่วงวิกฤต ร.ศ. 112 ให้ฟ้งหน่อยครับ")}
+                      className="bg-white hover:bg-amber-50 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-full whitespace-nowrap active:scale-95 shrink-0"
+                    >
+                      💰 เงินถุงแดงสยาม
+                    </button>
+                    <button 
+                      onClick={() => handleSendAiMessage("สุริยุปราคาที่หว้ากอในสมัย ร.4 สะท้อนถึงบทบาทความเชื่อสถาบันกษัตริย์ทางวิทยาศาสตร์อย่างไรบ้าง?")}
+                      className="bg-white hover:bg-amber-50 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-full whitespace-nowrap active:scale-95 shrink-0"
+                    >
+                      🔭 หว้ากอสมัย ร.4
+                    </button>
+                    <button 
+                      onClick={() => handleSendAiMessage("การเลิกทาสของสยาม แตกต่างจากการเลิกทาสของอเมริกาหรือชาติตะวันตกอย่างไร?")}
+                      className="bg-white hover:bg-amber-50 text-slate-700 border border-slate-200 px-2.5 py-1 rounded-full whitespace-nowrap active:scale-95 shrink-0"
+                    >
+                      🔓 การเลิกทาสสยาม
+                    </button>
+                  </div>
+                </div>
+
+                {/* Chat History View Area */}
+                <div className="flex-1 bg-white border border-slate-100 rounded-2xl p-3 overflow-y-auto max-h-[360px] no-scrollbar space-y-3">
+                  {aiHistory.map((message, idx) => (
+                    <div 
+                      key={idx}
+                      className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div className={`max-w-[85%] rounded-2xl p-3 text-xs ${
+                        message.role === 'user' 
+                          ? 'bg-amber-600 text-white rounded-br-none' 
+                          : 'bg-slate-100 text-slate-800 rounded-bl-none border border-slate-200'
+                      }`}>
+                        {message.role === 'assistant' ? (
+                          formatAIResponse(message.text)
+                        ) : (
+                          <p className="leading-relaxed">{message.text}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {isAiLoading && (
+                    <div className="flex justify-start">
+                      <div className="bg-slate-100 border border-slate-200 rounded-2xl rounded-bl-none p-3 max-w-[85%] flex items-center gap-2">
+                        <Icons.Loader className="w-4 h-4 text-amber-600" />
+                        <span className="text-xs text-slate-500">ศาสตราจารย์ AI กำลังค้นคว้าตำราประวัติศาสตร์จักรี...</span>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={chatEndRef} />
+                </div>
+
+                {/* Chat Message Input Bar */}
+                <div className="flex gap-2">
+                  <input 
+                    type="text"
+                    value={aiQuery}
+                    onChange={(e) => setAiQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSendAiMessage();
+                    }}
+                    placeholder="ถามคำถาม เช่น คณะธรรมยุติก่อตั้งอย่างไร?..."
+                    className="flex-1 bg-white border border-slate-200 text-xs text-slate-800 p-3 rounded-xl focus:outline-none focus:border-amber-500"
+                    disabled={isAiLoading}
+                  />
+                  <button 
+                    onClick={() => handleSendAiMessage()}
+                    disabled={isAiLoading || !aiQuery.trim()}
+                    className="bg-amber-600 hover:bg-amber-700 disabled:bg-slate-300 text-white p-3 rounded-xl active:scale-95 transition-all flex items-center justify-center shrink-0"
+                  >
+                    <Icons.PaperAirplane className="w-5 h-5" />
+                  </button>
+                </div>
+
+              </div>
+            )}
+
+            {/* Tab 5: Library Screen (Flashcards, search, bookmarks) */}
+            {currentTab === "library" && (
+              <div className="space-y-4">
+                
+                {/* Switchable Sub-Tabs */}
+                <div className="grid grid-cols-3 gap-1.5 bg-slate-200/60 p-1.5 rounded-xl text-center">
+                  <button 
+                    onClick={() => setLibrarySubTab("cards")}
+                    className={`py-1.5 px-1 rounded-lg text-xs font-bold transition-all ${librarySubTab === "cards" ? "bg-white text-amber-800 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                  >
+                    การ์ดคำศัพท์
+                  </button>
+                  <button 
+                    onClick={() => setLibrarySubTab("search")}
+                    className={`py-1.5 px-1 rounded-lg text-xs font-bold transition-all ${librarySubTab === "search" ? "bg-white text-amber-800 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                  >
+                    สืบค้นสากล
+                  </button>
+                  <button 
+                    onClick={() => setLibrarySubTab("bookmarks")}
+                    className={`py-1.5 px-1 rounded-lg text-xs font-bold transition-all ${librarySubTab === "bookmarks" ? "bg-white text-amber-800 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                  >
+                    บันทึกสอบ ({bookmarks.length})
+                  </button>
+                </div>
+
+                {/* Sub Tab: Interactive Flashcards */}
+                {librarySubTab === "cards" && (
+                  <div className="space-y-4 flex flex-col justify-between">
+                    <div className="space-y-1">
+                      <p className="text-[11px] text-slate-500">
+                        เครื่องมือสำหรับทบทวนแนวคิดสำคัญในบทเรียนคั่นหน้าได้ คลิกเพื่อพลิกการ์ดเพื่อดูข้อมูลแง่มุมความรู้
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-center py-4">
+                      <div 
+                        className="w-full max-w-[280px] h-[300px] perspective cursor-pointer"
+                        onClick={() => setIsFlipped(!isFlipped)}
+                      >
+                        <div className={`w-full h-full duration-500 transform-style-3d relative ${isFlipped ? 'rotate-y-180' : ''}`}>
+                          
+                          {/* Front */}
+                          <div className="absolute w-full h-full bg-white rounded-2xl border-2 border-amber-200 shadow-md p-6 flex flex-col justify-between backface-hidden items-center text-center">
+                            <div className="w-full flex justify-between text-slate-300">
+                              <span className="text-[10px] font-bold tracking-wider uppercase text-slate-400">คีย์เวิร์ด</span>
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); toggleBookmark(cardIndex, "card"); }}
+                                className="text-amber-500 hover:text-amber-600 active:scale-90 transition-transform"
+                              >
+                                <Icons.Bookmark className="w-5 h-5" fill={isBookmarked(cardIndex, "card") ? "currentColor" : "none"} />
+                              </button>
+                            </div>
+                            <div className="space-y-2">
+                              <div className="bg-amber-100 p-2.5 rounded-full inline-block">
+                                <Icons.Crown className="w-8 h-8 text-amber-600"/>
+                              </div>
+                              <h4 className="text-base font-bold text-slate-800 leading-snug break-words">
+                                {flashcardsData[cardIndex].term}
+                              </h4>
+                            </div>
+                            <span className="text-[11px] bg-slate-100 text-slate-500 py-1.5 px-3 rounded-full font-medium">
+                              คลิกเพื่อพลิกการ์ด
+                            </span>
+                          </div>
+
+                          {/* Back */}
+                          <div className="absolute w-full h-full bg-gradient-to-br from-amber-600 to-amber-700 text-white rounded-2xl shadow-md p-6 flex flex-col justify-between rotate-y-180 backface-hidden items-center text-center">
+                            <div className="w-full flex justify-between text-yellow-200/50">
+                              <span className="text-[10px] font-bold tracking-wider uppercase">ความหมาย / ข้อมูล</span>
+                              <span className="text-[10px] font-bold">Chakri Dynasty</span>
+                            </div>
+                            <p className="text-xs font-medium leading-relaxed px-1">
+                              {flashcardsData[cardIndex].definition}
+                            </p>
+                            <span className="text-[11px] bg-white/20 text-yellow-100 py-1.5 px-3 rounded-full">
+                              คลิกเพื่อพลิกกลับ
+                            </span>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center text-[11px] text-slate-400 font-semibold px-2">
+                        <span>การ์ดที่ {cardIndex + 1} จาก {flashcardsData.length}</span>
+                        <span>{isFlipped ? "คำแปล" : "คำศัพท์"}</span>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        <button 
+                          onClick={() => {
+                            setIsFlipped(false);
+                            setTimeout(() => {
+                              setCardIndex(cardIndex > 0 ? cardIndex - 1 : flashcardsData.length - 1);
+                            }, 150);
+                          }}
+                          className="bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold py-2.5 px-4 rounded-xl active:scale-95 transition-all text-center"
+                        >
+                          ย้อนกลับ
+                        </button>
+                        <button 
+                          onClick={() => {
+                            setIsFlipped(false);
+                            setTimeout(() => {
+                              setCardIndex(cardIndex < flashcardsData.length - 1 ? cardIndex + 1 : 0);
+                            }, 150);
+                          }}
+                          className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-2.5 px-4 rounded-xl active:scale-95 transition-all text-center shadow-sm"
+                        >
+                          คำถัดไป
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Sub Tab: Search */}
+                {librarySubTab === "search" && (
+                  <div className="space-y-4">
+                    <div className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-2">
+                      <Icons.Search className="text-slate-400 shrink-0"/>
+                      <input 
+                        type="text" 
+                        placeholder="พิมพ์เพื่อค้นหา เช่น ปูนซีเมนต์ไทย, ตราสามดวง..." 
+                        className="text-xs text-slate-700 w-full focus:outline-none"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                      {searchQuery && (
+                        <button onClick={() => setSearchQuery("")} className="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold px-2 py-0.5 rounded-lg">
+                          ล้าง
+                        </button>
+                      )}
+                    </div>
+
+                    {searchQuery.trim().length > 0 && (
+                      <div className="space-y-2">
+                        {searchResults.length > 0 ? (
+                          searchResults.map((res, idx) => (
+                            <div 
+                              key={idx} 
+                              onClick={() => {
+                                if (res.type === "king") {
+                                  setActiveKing(res.raw);
+                                  setCurrentTab("kings");
+                                } else {
+                                  setCardIndex(res.id);
+                                  setLibrarySubTab("cards");
+                                }
+                              }}
+                              className="bg-white p-3 rounded-xl border border-amber-100 shadow-sm hover:border-amber-200 cursor-pointer active:scale-[0.99] transition-all"
+                            >
+                              <div className="flex justify-between items-center mb-1">
+                                <span className="text-[9px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">
+                                  {res.type === "king" ? "ทำเนียบรัชกาล" : "คีย์เวิร์ด"}
+                                </span>
+                                <Icons.ChevronRight className="text-slate-300 w-4 h-4"/>
+                              </div>
+                              <h5 className="text-xs font-bold text-slate-800 leading-tight">{res.title}</h5>
+                              <p className="text-[11px] text-slate-500 leading-relaxed italic mt-1">
+                                "...{res.snippet}..."
+                              </p>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="bg-white p-6 rounded-2xl border border-slate-100 text-center text-xs text-slate-400">
+                            ไม่พบข้อมูลตรงตามข้อกำหนด ลองค้นคำ เช่น 'วิสาขบูชา', 'พดด้วง', 'ชลประทาน'
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Sub Tab: Bookmarks */}
+                {librarySubTab === "bookmarks" && (
+                  <div className="space-y-3">
+                    {bookmarks.length > 0 ? (
+                      <div className="grid grid-cols-1 gap-2">
+                        {bookmarks.map((bookmarkKey) => {
+                          const [type, idStr] = bookmarkKey.split("-");
+                          const id = parseInt(idStr);
+
+                          if (type === "king") {
+                            const kingObj = kingsList.find(k => k.id === id);
+                            if (!kingObj) return null;
+                            return (
+                              <div 
+                                key={bookmarkKey}
+                                onClick={() => { setActiveKing(kingObj); setCurrentTab("kings"); }}
+                                className="bg-white p-3 rounded-xl border border-slate-100 hover:border-amber-100 shadow-sm cursor-pointer flex justify-between items-center"
+                              >
+                                <div className="space-y-0.5">
+                                  <span className="text-[9px] bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded-md font-bold">ประวัติรัชกาล</span>
+                                  <h5 className="text-xs font-bold text-slate-800">{kingObj.title}: {kingObj.fullName}</h5>
+                                </div>
+                                <button 
+                                  onClick={(e) => { e.stopPropagation(); toggleBookmark(id, "king"); }}
+                                  className="text-amber-500 hover:text-amber-600 p-1 rounded-lg"
+                                >
+                                  <Icons.Bookmark className="w-4 h-4" fill="currentColor"/>
+                                </button>
+                              </div>
+                            );
+                          } else if (type === "card") {
+                            const cardObj = flashcardsData[id];
+                            if (!cardObj) return null;
+                            return (
+                              <div 
+                                key={bookmarkKey}
+                                onClick={() => { setCardIndex(id); setLibrarySubTab("cards"); }}
+                                className="bg-white p-3 rounded-xl border border-slate-100 hover:border-amber-100 shadow-sm cursor-pointer flex justify-between items-center"
+                              >
+                                <div className="space-y-0.5">
+                                  <span className="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded-md font-bold">คีย์เวิร์ด</span>
+                                  <h5 className="text-xs font-bold text-slate-800">{cardObj.term}</h5>
+                                </div>
+                                <button 
+                                  onClick={(e) => { e.stopPropagation(); toggleBookmark(id, "card"); }}
+                                  className="text-amber-500 hover:text-amber-600 p-1 rounded-lg"
+                                >
+                                  <Icons.Bookmark className="w-4 h-4" fill="currentColor"/>
+                                </button>
+                              </div>
+                            );
+                          }
+                          return null;
+                        })}
+                      </div>
+                    ) : (
+                      <div className="bg-white p-6 rounded-2xl border border-slate-100 text-center text-xs text-slate-400">
+                        ยังไม่มีรายการคั่นหน้าสำหรับการจัดสอบ คั่นหน้าข้อมูลสำคัญในแท็บอื่นๆ เพื่อนำมาแสดงไว้ที่นี่
+                      </div>
+                    )}
+                  </div>
+                )}
+
+              </div>
+            )}
+
+          </main>
+
+          {/* Bottom Thumb-Friendly Navigation Bar */}
+          <nav className="absolute bottom-0 inset-x-0 bg-white border-t border-slate-200 rounded-b-3xl py-2 px-3 flex justify-between items-center shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-20">
+            
+            <button 
+              onClick={() => { setCurrentTab("home"); setSearchQuery(""); }}
+              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl active:scale-95 transition-all ${currentTab === "home" ? "text-amber-600 font-bold bg-amber-50" : "text-slate-400 hover:text-slate-600"}`}
+            >
+              <Icons.Home className="w-5.5 h-5.5"/>
+              <span className="text-[10px]">คติความเชื่อ</span>
+            </button>
+
+            <button 
+              onClick={() => { setCurrentTab("kings"); setSearchQuery(""); }}
+              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl active:scale-95 transition-all ${currentTab === "kings" ? "text-amber-600 font-bold bg-amber-50" : "text-slate-400 hover:text-slate-600"}`}
+            >
+              <Icons.Crown className="w-5.5 h-5.5"/>
+              <span className="text-[10px]">ทำเนียบ ร.1-9</span>
+            </button>
+
+            <button 
+              onClick={() => { setCurrentTab("quiz"); setSearchQuery(""); }}
+              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl active:scale-95 transition-all ${currentTab === "quiz" ? "text-amber-600 font-bold bg-amber-50" : "text-slate-400 hover:text-slate-600"}`}
+            >
+              <Icons.CheckSquare className="w-5.5 h-5.5"/>
+              <span className="text-[10px]">แบบทดสอบ</span>
+            </button>
+
+            {/* AI Advisor Tab */}
+            <button 
+              onClick={() => { setCurrentTab("ai_tutor"); setSearchQuery(""); }}
+              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl active:scale-95 transition-all ${currentTab === "ai_tutor" ? "text-amber-600 font-bold bg-amber-50" : "text-slate-400 hover:text-slate-600"}`}
+            >
+              <Icons.Sparkles className="w-5.5 h-5.5 text-amber-600"/>
+              <span className="text-[10px] font-bold">ถาม AI</span>
+            </button>
+
+            <button 
+              onClick={() => { setCurrentTab("library"); }}
+              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl active:scale-95 transition-all ${currentTab === "library" ? "text-amber-600 font-bold bg-amber-50" : "text-slate-400 hover:text-slate-600"}`}
+            >
+              <Icons.Book className="w-5.5 h-5.5"/>
+              <span className="text-[10px]">คลังความรู้</span>
+            </button>
+
+          </nav>
+
+        </div>
+      );
+    }
+
+    const rootElement = document.getElementById("root");
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(<App/>);
+  </script>
+</body>
+</html>
